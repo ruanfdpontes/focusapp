@@ -1,11 +1,14 @@
 // Configuracao do app Expo (Focus).
 // Injeta a URL base da API em expo.extra.apiBaseUrl a partir de
-// process.env.EXPO_PUBLIC_API_BASE_URL, com default http://localhost:3000.
-// Para rodar no celular via Expo Go, defina EXPO_PUBLIC_API_BASE_URL com o IP
-// da LAN do PC servidor (ex.: http://192.168.0.10:3000) antes de `npx expo start`.
+// process.env.EXPO_PUBLIC_API_BASE_URL, com default no servidor hospedado no
+// Render. Assim o app ja vem apontando para a nuvem, sem configuracao manual.
+// Para apontar para outro servidor (ex.: um backend local em LAN), defina
+// EXPO_PUBLIC_API_BASE_URL (ex.: http://192.168.0.10:3000) antes do build/start,
+// ou use a tela "Endereco do servidor" dentro do app (override em runtime).
 
-const apiBaseUrl =
-  process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
+const SERVIDOR_PADRAO = "https://focusapp-tawg.onrender.com";
+
+const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL ?? SERVIDOR_PADRAO;
 
 module.exports = () => ({
   expo: {
