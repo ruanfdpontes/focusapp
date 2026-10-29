@@ -1,0 +1,15 @@
+# Blueprint do Render para o backend Focus (demo MVP).
+# Cria um Web Service gratuito que roda o servidor Node/Express a partir de server/.
+# CORS aberto e SQLite efêmero são ACEITÁVEIS apenas para a demo (ver README).
+services:
+  - type: web
+    name: focus-server
+    runtime: node
+    plan: free
+    rootDir: server          # subdiretório do monorepo onde está o backend
+    buildCommand: npm install # baixa deps; better-sqlite3 usa prebuild (sem compilar)
+    startCommand: npm start   # = node src/index.js
+    healthCheckPath: /health  # GET /health responde {"ok":true}
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true   # Render gera um segredo forte (não usar o default demo)

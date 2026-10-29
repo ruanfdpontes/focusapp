@@ -20,6 +20,8 @@ const errorHandler = require('./middleware/errorHandler');
 function createApp(db) {
   const app = express();
 
+  // CORS aberto (qualquer origem) é permissivo de propósito, aceitável SOMENTE
+  // para a demo MVP; endurecer antes de uso real.
   app.use(cors());
   app.use(express.json());
 

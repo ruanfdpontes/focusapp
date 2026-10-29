@@ -142,6 +142,28 @@ Um **único APK serve para qualquer rede**, porque o endereço do servidor é co
 
 ---
 
+## Hospedar o servidor no Render (gratuito)
+
+Para apresentar a demo ao cliente sem depender da sua LAN (e sem manter seu PC ligado), o backend `server/` pode rodar no **Render.com** no **plano gratuito**. Assim o app/APK fala com uma **URL pública https** em vez de um IP da rede local.
+
+Passos:
+
+1. **Envie o repositório para o GitHub** (o Render puxa o código de lá).
+2. No Render, escolha uma das opções:
+   - **Blueprint (recomendado):** *New → Blueprint* apontando para o repo. O Render lê o `render.yaml` na raiz e cria o Web Service `focus-server` já configurado.
+   - **Web Service manual:** *New → Web Service*, aponte o **Root Directory** para `server`, use **build** `npm install` e **start** `npm start`, plano **Free**.
+3. Aguarde o primeiro deploy. O Render gera uma **URL pública https** (ex.: `https://focus-server.onrender.com`) — **sem `:3000`**, pois o Render serve em 443/https.
+4. O **`JWT_SECRET` é gerado automaticamente** pelo Render (`generateValue`), sem precisar colar segredo nenhum.
+5. O **health check** usa `/health` (responde `{"ok":true}`).
+
+> **Avisos do plano gratuito:**
+> - **Hibernação + cold start:** o serviço **dorme após ~15 min** sem uso; a primeira requisição depois disso leva **~1 min** para "acordar". É normal na demo — basta esperar o primeiro acesso.
+> - **Dados efêmeros:** o SQLite fica em disco **efêmero**, então **os dados resetam** a cada restart/redeploy. O seed recria dono/instrutor/aluno a cada boot. Ok para demo; produção exigiria um banco persistente (ex.: Postgres) — tarefa futura.
+
+No **APK ou app web**, na tela **"Endereço do servidor"**, informe a **URL https do Render** (ex.: `https://focus-server.onrender.com`, **sem `:3000`**), toque em **"Testar conexão"** e salve.
+
+---
+
 ## Estrutura
 
 ```
