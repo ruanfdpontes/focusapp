@@ -41,6 +41,8 @@ module.exports = () => ({
     web: {
       favicon: "./assets/favicon.png",
       bundler: "metro",
+      // SPA: gera um unico dist/index.html para deploy estatico (ex.: Vercel).
+      output: "single",
     },
     plugins: ["expo-router", "expo-secure-store"],
     extra: {

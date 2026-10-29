@@ -164,6 +164,26 @@ No **APK ou app web**, na tela **"Endereço do servidor"**, informe a **URL http
 
 ---
 
+## Publicar a versão web na Vercel
+
+Além de rodar a web localmente (`npx expo start --web`), dá para publicar a **versão web** do app numa **URL pública https** usando a **Vercel**, com **auto-deploy** a cada push. Fluxo natural: backend no Render (acima) → front web na Vercel.
+
+Passos:
+
+1. **Conecte o repositório do GitHub** (`ruanfdpontes/focusapp`, branch `main`) à Vercel (*Add New → Project → Import*).
+2. Defina o **Root Directory = `app`** (é um monorepo; a web vive no pacote `app/`).
+3. Build e roteamento já vêm do `app/vercel.json` — não precisa configurar à mão:
+   - **Build:** `npx expo export --platform web` gera a saída estática em `dist`.
+   - **Rewrites de SPA:** todo caminho cai no `index.html`, então refresh/deep-link em rotas profundas (`/login`, `/servidor`, `/trocar-senha`, `/solicitar-conta` e rotas por perfil) **não dá 404** num host estático.
+4. A Vercel gera uma **URL pública https** e faz **auto-deploy** a cada push no `main`.
+
+Sobre a API:
+
+- A web **já fala com o backend do Render por padrão** (default `https://focusapp-tawg.onrender.com`, definido em `app/app.config.js`) — não é preciso configurar nada.
+- Opcionalmente, para apontar para outro backend, defina a env **`EXPO_PUBLIC_API_BASE_URL`** nas *Environment Variables* da Vercel (requer um novo build/redeploy), ou use a tela **"Endereço do servidor"** dentro do app (override em runtime).
+
+---
+
 ## Estrutura
 
 ```
