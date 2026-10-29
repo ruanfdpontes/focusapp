@@ -1,7 +1,7 @@
 {
   "task_id": "task-focus-mvp",
   "task_description": "Implementar o MVP Focus (gestão de treinos de academia) fiel ao design aprovado em .agents/tasks/design.md: backend Node.js/Express + better-sqlite3 (auth JWT+bcrypt, enforcement server-side de estados de conta e mustChangePassword lendo do banco, seed idempotente) e cliente Expo (React Native + Expo Router) em web e mobile, todo em pt-BR. Incorpora os 3 fixes restantes do design-review.json: validacao de titulo da ficha, validacao do array exercicios, e padronizacao do shape de user entre /auth/login e /auth/me.",
-  "status": "pending",
+  "status": "completed",
   "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
   "blocked_reason": null
 }
