@@ -10,3 +10,6 @@ app/dist/
 app/web-build/
 *.log
 .DS_Store
+
+# Artefatos internos de desenvolvimento (planos, revisões de workflow)
+.agents/

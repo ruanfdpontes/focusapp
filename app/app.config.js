@@ -42,6 +42,9 @@ module.exports = () => ({
     plugins: ["expo-router", "expo-secure-store"],
     extra: {
       apiBaseUrl,
+      eas: {
+        projectId: "95a2c37e-7d26-465a-9fec-35eeb622b0bc",
+      },
     },
   },
 });
