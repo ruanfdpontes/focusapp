@@ -1,0 +1,31 @@
+{
+  "verdict": "CHANGES_REQUESTED",
+  "findings": [
+    {
+      "id": 1,
+      "severity": "MEDIUM",
+      "title": "titulo da ficha e NOT NULL e obrigatorio mas nao tem regra de validacao em 2.11",
+      "where": "§2.5 (fichas.titulo NOT NULL), §2.7 (POST /alunos/:id/fichas, PUT /fichas/:fichaId), §2.11 (tabela de validacao), RF-11/RF-12",
+      "problem": "A tabela de validacao de §2.11 cobre nome, matricula, senhas, login e todos os campos de exercicios[], mas nao tem nenhuma linha para titulo. O schema marca titulo NOT NULL e a rota o declara obrigatorio. Sem validacao de rota, um POST com titulo ausente/vazio/nao-string passa por validators.js e so falha na constraint NOT NULL do SQLite, virando 500 ERRO_INTERNO (por §2.10) em vez do 400 DADOS_INVALIDOS prometido. Buraco de validacao de entrada no fluxo principal do instrutor.",
+      "fix": "Adicionar em §2.11: '| titulo (ficha) | obrigatorio no POST, opcional no PUT; string nao vazia apos trim; 1-120 chars. |' e garantir que validators.js rejeite titulo ausente/vazio com 400 DADOS_INVALIDOS antes do repositorio. Opcional: CA 'POST /alunos/:id/fichas sem titulo retorna 400, nao 500'."
+    },
+    {
+      "id": 2,
+      "severity": "NIT",
+      "title": "Presenca e tamanho do array exercicios nao tem regra de validacao",
+      "where": "§2.7 (POST /alunos/:id/fichas, PUT /fichas/:fichaId/exercicios), §2.11",
+      "problem": "§2.11 valida os campos de cada item exercicios[], mas nao diz nada sobre o array em si: pode ser omitido? vazio? precisa ser array? ha limite superior? Ambiguo se POST com exercicios ausente ou [] e 400 ou cria ficha vazia. Afeta tambem a semantica de totalSeries===0 do percentual.",
+      "fix": "Adicionar em §2.11 regras explicitas, ex.: exercicios (POST) obrigatorio, array, 1-50 itens; exercicios (PUT) obrigatorio, array, 0-50 itens (vazio = remover todos). Ajustar conforme decisao de produto sobre permitir ficha vazia."
+    },
+    {
+      "id": 3,
+      "severity": "NIT",
+      "title": "Shape do objeto user diverge entre /auth/login e /auth/me",
+      "where": "§2.7 (/auth/login user sem status; /auth/me user com status)",
+      "problem": "/auth/login retorna user:{id,nome,role,mustChangePassword} sem status, enquanto /auth/me inclui status. O AuthContext recebe user de shape diferente conforme a origem, convidando a bugs no cliente (ler user.status apos login e obter undefined). Reidratacao funciona pois usa /auth/me, por isso NIT.",
+      "fix": "Padronizar o user de /auth/login para incluir status (aluno recem-logado tem status='aprovado'), igualando o shape ao de /auth/me. Alternativa: documentar em §2.9 que status so e lido via /auth/me e nunca da resposta de login."
+    }
+  ],
+  "counts": { "HIGH": 0, "MEDIUM": 1, "NIT": 2 },
+  "reviewDoc": "c:\\Users\\INEX\\source\\repos\\personal\\focus\\.agents\\tasks\\design-review.md"
+}

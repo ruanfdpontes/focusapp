@@ -1,0 +1,31 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Cliente Expo (React Native + Expo Router) rodando em web e mobile a partir do mesmo codigo, todo em pt-BR: config com API_BASE_URL via EXPO_PUBLIC_, api/client + mapa de erros pt-BR, AuthContext com reidratacao via /auth/me, guard de rota unico em _layout.tsx, e todas as telas por papel (aluno, instrutor, dono). Mais o README em pt-BR (instalar/rodar/credenciais/walkthrough/avisos/next steps). Depende de FEAT-002 (API disponivel para os fluxos).",
+  "status": "pending",
+  "steps": [
+    "Scaffolding do app Expo: app/package.json (expo, expo-router, react, react-native, react-dom, react-native-web, @tanstack/react-query, expo-secure-store, expo-constants; versoes compativeis com a versao do Expo escolhida), app/app.json, app/app.config.js (injeta expo.extra.apiBaseUrl de process.env.EXPO_PUBLIC_API_BASE_URL, default 'http://localhost:3000'), tsconfig.json. Rodar 'cd app && npm install'.",
+    "app/src/config.ts: exporta API_BASE_URL (process.env.EXPO_PUBLIC_API_BASE_URL ?? Constants.expoConfig?.extra?.apiBaseUrl ?? 'http://localhost:3000'). app/src/storage.ts: wrapper get/set/remove usando expo-secure-store no nativo e localStorage no web. app/src/api/client.ts: fetch wrapper que prefixa API_BASE_URL, injeta Authorization: Bearer <token>, parseia { erro: { codigo, mensagem } } e lanca erro com codigo. app/src/api/erros.ts: mapa codigo->mensagem pt-BR (CONTA_PENDENTE, CONTA_REJEITADA, CREDENCIAIS_INVALIDAS, SENHA_DEVE_SER_TROCADA, MATRICULA_EM_USO, LOGIN_EM_USO, ALUNO_NAO_APROVADO, NOVA_SENHA_IGUAL, SENHA_FRACA, ESTADO_INVALIDO, erro de rede, etc.).",
+    "app/src/auth/AuthContext.tsx: estado de sessao; no boot le token do storage e, se houver, chama GET /auth/me para obter role/status/mustChangePassword frescos; expoe login/logout/changePassword/reidratar; guarda token reemitido apos change-password. Se /auth/me -> 401, limpa sessao.",
+    "app/src/app/_layout.tsx: prove AuthContext + React Query QueryClientProvider; e o UNICO guard de rota via <Redirect>, nesta precedencia: reidratando -> permanece em index (spinner); sem sessao -> /login; mustChangePassword===true (por FLAG, qualquer role) -> /trocar-senha; senao roteia pelo grupo do role (aluno->(aluno)/treino, instrutor->(instrutor)/alunos, dono->(dono)/solicitacoes). app/src/app/index.tsx: apenas spinner 'Carregando...' enquanto reidrata (nao decide rota).",
+    "Telas comuns em pt-BR: app/src/app/login.tsx (campos Credencial e Senha; link 'Solicitar conta de aluno'; erros mapeados via api/erros.ts), app/src/app/solicitar-conta.tsx (Matricula, Nome, Senha -> feedback de solicitacao enviada), app/src/app/trocar-senha.tsx (Senha atual, Nova senha, Confirmar; ao sucesso guarda token reemitido e o guard roteia pelo role).",
+    "Telas do aluno: app/src/app/(aluno)/treino.tsx ('Meu treino': consome GET /alunos/:id/fichas com seriesConcluidas, renderiza a ficha ativa com checkboxes por serie, marcar/desmarcar -> POST/DELETE /completions e invalida a query React Query), app/src/app/(aluno)/progresso.tsx ('Progresso': percentual por exercicio e geral de GET .../progresso).",
+    "Telas do instrutor: app/src/app/(instrutor)/alunos.tsx ('Alunos': lista de aprovados; tocar abre a ficha), app/src/app/(instrutor)/ficha/[alunoId].tsx ('Ficha de treino': criar/editar titulo e lista de exercicios com adicionar/remover/reordenar; salvar -> POST/PUT com reconciliacao por id; aviso de que excluir exercicio apaga o progresso dele).",
+    "Telas do dono: app/src/app/(dono)/solicitacoes.tsx ('Solicitacoes': pendentes com Aprovar/Rejeitar), app/src/app/(dono)/instrutores.tsx ('Instrutores': lista + formulario Cadastrar instrutor Nome/Login/Senha padrao), app/src/app/(dono)/visao-geral.tsx ('Visao geral': contagens e listas de alunos e instrutores). Botao 'Sair' (logout) nos cabecalhos dos grupos.",
+    "Completar c:\\Users\\INEX\\source\\repos\\personal\\focus\\README.md em pt-BR: pre-requisito Node LTS 20/22 (.nvmrc), comandos de start do server e do app (web e celular com EXPO_PUBLIC_API_BASE_URL), credenciais semeadas (dono/dono123, instrutor/instrutor123, aluno 2024001/aluno123), walkthrough dos fluxos de conta, AVISO SOMENTE-DEMO de JWT_SECRET e senhas de seed, contingencia de prebuild (plano B node:sqlite requer Node 22+), e proximos passos (trava de recinto via middleware recintoLock)."
+  ],
+  "acceptance_criteria": [
+    "'cd app && npm install' conclui sem erro.",
+    "'cd app && npx tsc --noEmit' nao reporta erros de tipo.",
+    "'cd app && npx expo start --web' sobe e a tela de login carrega; com o servidor rodando, login dono/dono123 chega em Solicitacoes e login aluno 2024001/aluno123 chega em Meu treino com checkboxes.",
+    "Toda tela e mensagem exibida ao usuario esta em Portugues do Brasil.",
+    "README documenta os comandos de start, credenciais, avisos de demo e next steps."
+  ],
+  "verification": [
+    "cd app && npm install",
+    "cd app && npx tsc --noEmit",
+    "cd app && npx expo start --web (smoke manual: tela de login carrega; com server rodando, fluxos dono e aluno funcionam)"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
