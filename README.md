@@ -107,6 +107,41 @@ Depois, abra o app no **Expo Go** lendo o QR Code. O celular e a web conversam c
 
 ---
 
+## Gerar o APK (EAS Build)
+
+É possível empacotar o app em um **APK** instalável no Android usando o **EAS Build** (serviço de build na nuvem da Expo). O `eas-cli` já é uma **devDependency** do pacote `app/`, então não precisa instalar nada globalmente — basta usar `npx eas`.
+
+Pré-requisitos:
+
+- Uma **conta Expo gratuita** (crie em [expo.dev](https://expo.dev)).
+- Dependências do app instaladas.
+
+Passos (PowerShell/Windows):
+
+```
+cd app
+npm install
+npx eas login
+npx eas build -p android --profile preview
+```
+
+- O perfil **`preview`** (definido em `app/eas.json`) gera um **`.apk`** de distribuição interna, pronto para instalar direto no celular.
+- Como atalho, há o script `npm run build:apk` (equivale ao comando `eas build` acima).
+- Ao terminar, o EAS retorna um **link** para baixar o `.apk`. Baixe no celular e instale (pode ser preciso permitir "instalar de fontes desconhecidas").
+
+## Endereço do servidor no app instalado
+
+Um **único APK serve para qualquer rede**, porque o endereço do servidor é configurável **em tempo de execução** (não fica congelado no build). Após instalar o APK:
+
+1. Abra o app e, na tela de login, toque em **"Endereço do servidor"**.
+2. Digite a URL da **LAN do PC** onde o backend roda (ex.: `http://192.168.0.10:3000`).
+3. Toque em **"Testar conexão"** para confirmar que o servidor responde.
+4. Toque em **"Salvar"** e volte ao login para entrar normalmente.
+
+> Celular e PC precisam estar na **mesma rede Wi-Fi**, e o **backend precisa estar rodando** (`cd server; npm run start`). O endereço salvo fica guardado no aparelho e é usado em todas as chamadas seguintes.
+
+---
+
 ## Estrutura
 
 ```

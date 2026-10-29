@@ -26,6 +26,8 @@ module.exports = () => ({
       supportsTablet: true,
     },
     android: {
+      package: "com.focus.app",
+      versionCode: 1,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff",

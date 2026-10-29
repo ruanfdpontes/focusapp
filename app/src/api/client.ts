@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config";
+import { obterApiBaseUrl } from "@/config";
 import { CODIGO_ERRO_REDE, mensagemDeErro } from "@/api/erros";
 
 // Erro tipado lancado pelo client. Carrega o codigo da API (ou ERRO_REDE),
@@ -48,7 +48,7 @@ async function requisitar<T>(
 
   let resposta: Response;
   try {
-    resposta = await fetch(`${API_BASE_URL}${caminho}`, {
+    resposta = await fetch(`${obterApiBaseUrl()}${caminho}`, {
       method: metodo,
       headers,
       body: opcoes.corpo !== undefined ? JSON.stringify(opcoes.corpo) : undefined,

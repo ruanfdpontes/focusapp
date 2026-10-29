@@ -79,6 +79,10 @@ export default function LoginScreen() {
           <Link href="/solicitar-conta" style={{ marginTop: 8 }}>
             <Rotulo>Solicitar conta de aluno</Rotulo>
           </Link>
+
+          <Link href="/servidor" style={{ marginTop: 8 }}>
+            <Rotulo>Endereço do servidor</Rotulo>
+          </Link>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -23,7 +23,7 @@ const DESTINO_POR_PAPEL = {
 } as const;
 
 // Rotas publicas, acessiveis sem sessao.
-const ROTAS_PUBLICAS = ["/login", "/solicitar-conta"];
+const ROTAS_PUBLICAS = ["/login", "/solicitar-conta", "/servidor"];
 
 // UNICO guard de rota do app (design §2.9). Decide o destino por
 // precedencia: reidratando -> spinner; sem sessao -> /login;

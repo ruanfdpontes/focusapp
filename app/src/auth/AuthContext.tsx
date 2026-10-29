@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { api, ApiError, registrarProvedorDeToken } from "@/api/client";
+import { carregarApiBaseUrlSalva } from "@/config";
 import type {
   RespostaLogin,
   RespostaMe,
@@ -63,6 +64,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let ativo = true;
     (async () => {
       try {
+        // Carrega a URL base persistida antes de qualquer chamada, para que
+        // a reidratacao ja use o endereco definido pelo usuario.
+        await carregarApiBaseUrlSalva();
         const salvo = await getItem(CHAVE_TOKEN);
         if (!salvo) {
           return;
